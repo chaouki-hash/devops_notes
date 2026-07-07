@@ -1,47 +1,33 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Install API Dependencies') {
-            steps {
-                dir('api') {
-                    bat 'npm install'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                dir('api') {
-                    bat 'npm test'
-                }
-            }
-        }
-
-        stage('Build') {
-            steps {
-                dir('api') {
-                    bat 'npm run build'
-                }
-            }
-        }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    post {
-        always {
-            echo 'Pipeline finished.'
+    stage('Build') {
+      steps {
+        dir('api') {
+          sh 'npm install'
         }
-        success {
-            echo 'Build succeeded!'
-        }
-        failure {
-            echo 'Build failed.'
-        }
+      }
     }
+
+    stage('Test') {
+      steps {
+        dir('api') {
+          sh 'npm test'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      echo 'Pipeline terminé'
+    }
+  }
 }
